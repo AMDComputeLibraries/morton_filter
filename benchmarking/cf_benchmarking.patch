@@ -1,0 +1,34 @@
+diff --git a/Makefile b/Makefile
+index 9da574b..f0d521f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,8 +3,8 @@ AR = ar
+ PREFIX=/usr/local
+ 
+ # Uncomment one of the following to switch between debug and opt mode
+-#OPT = -O3 -DNDEBUG
+-OPT = -g -ggdb
++OPT = -Ofast -march=native -DNDEBUG
++#OPT = -g -ggdb
+ 
+ CFLAGS += --std=c++11 -fno-strict-aliasing -Wall -c -I. -I./include -I/usr/include/ -I./src/ $(OPT)
+ 
+diff --git a/src/cuckoofilter.h b/src/cuckoofilter.h
+index 728c10e..b4f01e1 100644
+--- a/src/cuckoofilter.h
++++ b/src/cuckoofilter.h
+@@ -96,6 +96,14 @@ class CuckooFilter {
+     table_ = new TableType<bits_per_item>(num_buckets);
+   }
+ 
++  // Added by Alex Breslow to support comparative benchmarking with a Morton 
++  // filter implementation
++  CuckooFilter(const size_t buckets_in_table,
++    bool victim_cache_used) : num_items_(0), victim_(), hasher_(){
++    victim_.used = victim_cache_used;
++    table_ = new TableType<bits_per_item>(buckets_in_table);
++  }  
++
+   ~CuckooFilter() { delete table_; }
+ 
+   // Add an item to the filter.
