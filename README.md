@@ -1,6 +1,4 @@
-#Morton Filter
-
-Description
+Morton Filter Description
 ================
 
 This repo contains an implementation of a 
