@@ -161,6 +161,11 @@ The following programs should run out of the box like so:
 ```
 
 
+Known Issues
+===================
+The batching interface currently only works correctly when the input is a multiple of the batch size (presently 128).  We aim to fix 
+this limitation sometime soon.
+
 Reporting Use
 ===================
 We are interested in learning how Morton filters are being used in the wild.  If you find this code helpful, please let us 
