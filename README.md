@@ -106,7 +106,7 @@ make
 ```
 
 Please note that this will also clone Fan et al.'s cuckoo filter implementation (https://github.com/efficient/cuckoofilter) and patch it to add another constructor that enables comparative benchmarking 
-with Morton filters.  Fan et al.'s code should be at ../cuckoofilter.  Please cite their code and paper if you end up using it.  Instructions for how to cite it are at the preceding link.
+with Morton filters.  Fan et al.'s code will be cloned to ./benchmarking/cuckoofilter.  Please cite their code and paper if you end up using it.  Instructions for how to cite it are at the preceding link.
 
 For compiling the code, we recommend using g++ compiler version 5.4.  Later versions of GCC (e.g., 8.x) as of March, 2019 still appear to have a regression that 
 reduces the performance of the compiled code.
