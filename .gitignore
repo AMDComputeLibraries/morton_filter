@@ -12,7 +12,6 @@ test_vectorized_code
 benchmark
 multicore_benchmark
 multicore_benchmark_serial
-Makefile
 test_error_rate.h
 test_low_level_optimizations
 test_morton_filter
