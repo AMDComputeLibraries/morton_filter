@@ -166,6 +166,8 @@ Known Issues
 The batching interface currently only works correctly when the input is a multiple of the batch size (presently 128).  We aim to fix 
 this limitation sometime soon.
 
+There is a performance regression in deletion throughput due to a correctness bug that I fixed in the batched deletion algorithm.  Peak deletion throughput drops from about 38 MOPS down to 28 MOPS for the 3-slot bucket configuration used in the VLDB'18 paper.
+
 Reporting Use
 ===================
 We are interested in learning how Morton filters are being used in the wild.  If you find this code helpful, please let us 
