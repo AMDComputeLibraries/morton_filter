@@ -9,7 +9,11 @@ Alex Breslow and Nuwan Jayasena.
 
 A Morton filter is a modified 
 cuckoo filter (see Fan et al. https://dl.acm.org/citation.cfm?id=2674005.2674994) 
-that is optimized for bandwidth-constrained systems.  
+that is optimized for bandwidth-constrained systems.  Morton filters use additional 
+computation in order to reduce their off-chip memory traffic.  Thus, they particularly 
+excel when the latency of this additional computation can be hidden behind long-latency 
+loads from DRAM (e.g., 100 ns).
+
 Like a cuckoo filter, a Morton filter supports 
 insertions, deletions, and lookup operations.  It additionally adds 
 high-throughput self-resizing, a feature of quotient filters, which allows a 
@@ -23,8 +27,8 @@ filter.
 
 Morton filters can also be configured to use less memory than a cuckoo filter 
 for the same error rate while simultaneously delivering insertion, deletion, 
-and lookup throughputs that are, respectively, 0.9x to 15.5x, 
-1.3x to 1.6x, and 1.3x to 2.5x higher than a cuckoo filter.  Morton filters 
+and lookup throughputs that are, respectively, up to 15.5x, 
+1.3x, and 2.5x higher than a cuckoo filter.  Morton filters 
 in contrast to vanilla cuckoo filters do not require a power of two number of 
 buckets but rather only a number 
 that is a multiple of two.  They also use fewer bits per item
@@ -37,14 +41,14 @@ that ***this code has not been hardened for industrial use but is an
 academic-style prototype***.  
 
 A forthcoming extended version that describes additional features like the filter self-resizing 
-operation (released here) is under review at the VLDB Journal in a special issue with the best papers from VLDB'18.  A 
+operation (released here) has been accepted to the VLDB Journal in a special issue with the best papers from VLDB'18.  A 
 subsequent paper that extends self-resizing to cuckoo filters will also shortly be submitted for peer review.
 
 Using the Code
 =================
 ***When using the code, you are required to comply with the terms of the license (LICENSE.txt).***  Please cite our paper 
 if you use the code
-base.  The Proceedings of the Very Large Data Bases Endowment has requested that the ***paper be cited in this fashion:***
+base.  The Very Large Data Bases Endowment has requested that the ***paper be cited in this fashion:***
 
 Alex D. Breslow and Nuwan S. Jayasena. Morton Filters: Faster,
 Space-Efficient Cuckoo Filters via Biasing, Compression, and Decoupled
@@ -117,10 +121,11 @@ some sample Morton filter configurations in *morton_sample_configs.h* that you c
 For example, the following code will construct a Morton filter with 3-slot buckets and 8-bit fingerprints that matches the primary configuration used in our VLDB'18 paper:
 ```C++ 
 #include "morton_sample_configs.h"
+using namespace CompressedCuckoo; // Morton filter namespace
 
 int main(int argc, char** argv){
-  using namespace CompressedCuckoo; // Morton filter namespace
-  Morton3_8(128 * 1024 * 1024); // Construct a Morton filter with at least 128 * 1024 * 1024 slots
+  // Construct a Morton filter with at least 128 * 1024 * 1024 slots for fingerprints
+  Morton3_8 mf(128 * 1024 * 1024);
   return 0;
 }
 ``` 
