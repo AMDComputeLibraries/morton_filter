@@ -21,6 +21,17 @@
 # Author: Alex D. Breslow 
 #         Advanced Micro Devices, Inc.
 #         AMD Research
+#
+# Code Source: https://github.com/AMDComputeLibraries/morton_filter
+#
+# VLDB 2018 Paper: https://www.vldb.org/pvldb/vol11/p1041-breslow.pdf
+#
+# How To Cite:
+#  Alex D. Breslow and Nuwan S. Jayasena. Morton Filters: Faster, Space-Efficient
+#  Cuckoo Filters Via Biasing, Compression, and Decoupled Logical Sparsity. PVLDB,
+#  11(9):1041-1055, 2018
+#  DOI: https://doi.org/10.14778/3213880.3213884
+
 
 ifndef CXX
   CXX=g++ # Code uses GCC builtins.  I do not recommend changing the compiler.
