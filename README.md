@@ -41,7 +41,7 @@ that ***this code has not been hardened for industrial use but is an
 academic-style prototype***.  
 
 A forthcoming extended version that describes additional features like the filter self-resizing 
-operation (released here) has been accepted to the VLDB Journal in a special issue with the best papers from VLDB'18.  A 
+operation (released here in this repository) has been accepted to the VLDB Journal in a special issue with the best papers from VLDB'18.  An official preprint is available from Springer's website (https://link.springer.com/article/10.1007/s00778-019-00561-0).  A 
 subsequent paper that extends self-resizing to cuckoo filters will also shortly be submitted for peer review.
 
 Using the Code
