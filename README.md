@@ -102,7 +102,7 @@ Key files
 How to Use
 ===================
 The code is implemented as a template header library, which means that you just need to point your C++ preprocessor to the Morton filter top-level directory
-and include *morton_filter.h*.  At present, we only support GNU's C++ compiler (g++).  Below is an example of how to use our Makefile 
+and include *morton_filter.h*.  **At present, we only support GNU's C++ compiler (g++).**  Below is an example of how to use our Makefile 
 to compile the example programs on Linux systems using g++:
 ```bash
 cd morton_filter/benchmarking
