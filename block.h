@@ -413,7 +413,6 @@ struct Block{ // Assuming block size is a multiple of atom_t's size in bytes
       memcpy(source_address, &item, field_width_bytes);
     }
 
-    __attribute__((optimize("unroll-loops")))
     INLINE void add_cross_left_displace(uint64_t raw_offset_bits, 
       uint64_t field_width_bits, uint64_t index, atom_t item){
       uint64_t global_index = index * field_width_bits + raw_offset_bits;

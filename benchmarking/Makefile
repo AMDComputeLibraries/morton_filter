@@ -34,12 +34,20 @@
 
 
 ifndef CXX
-  CXX=g++ # Code uses GCC builtins.  I do not recommend changing the compiler.
+  CXX=g++ # Code uses GCC builtins.  I recommend using either g++ or clang++.  
+          # GCC's g++ is probably preferred since it appears to yield better 
+	  # throughput numbers.  However, the results are roughly comparable.
 endif
+
+# Comment the line below back in if you want to instrument the code with the 
+# sanitizer functionality
+#SANITIZE:=-fsanitize=address,undefined,leak
 
 OPT=-Ofast -march=native -mpopcnt 
 
-FLAGS:=-Wall -Winline -g -std=c++11 $(OPT)
+FLAGS:=-Wall -Winline -g -std=c++11 $(OPT) $(SANITIZE)
+
+# Need to routinely check for bugs with -fsanitize=address -fsanitize=undefined
 
 TARGETS=benchmark \
   benchmark_cf benchmark_mf \

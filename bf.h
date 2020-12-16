@@ -60,7 +60,7 @@ namespace BlockedBF{
     inline bool contains_and_update(const hash_t item){
       constexpr slot_type one = 1;
       constexpr slot_type slot_width_bits = sizeof(slot_type) * 8;
-      constexpr slot_type log2_slot_width = log2(slot_width_bits);
+      constexpr slot_type log2_slot_width = util::log2ceil(slot_width_bits);
       constexpr slot_type shift0 = 0;
       constexpr slot_type shift1 = log2_slot_width;
       constexpr slot_type shift2 = log2_slot_width * 2;
