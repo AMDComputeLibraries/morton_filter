@@ -457,7 +457,9 @@ namespace CompressedCuckoo{
     // Currently set to false because clear_swath hasn't been rigorously tested
     constexpr bool _only_clear_ota_and_fca = false;
     if(!_only_clear_ota_and_fca){ // Competitive with the code in the loop below
-      memset(storage, 0x0, allocation_size);
+      for(hash_t i = 0; i < total_blocks; i++){
+        storage[i] = block_t{}; 
+      }
       return storage;
     } // ELSE
     for(hash_t i = 0; i < total_blocks; i++){
@@ -496,6 +498,9 @@ namespace CompressedCuckoo{
 
       size_t allocation_size = sizeof(*_summed_counters) * 
         (_buckets_per_block + 1);
+      // Round allocation size up to a multiple of 64.
+      allocation_size = (allocation_size + g_cache_line_size_bytes - 1) & 
+        ~(g_cache_line_size_bytes - 1);
       _summed_counters = static_cast<decltype(_summed_counters)>(aligned_alloc(g_cache_line_size_bytes, allocation_size));
      // Memset not required, initialized by full_exclusive_scan 
       
@@ -665,8 +670,8 @@ namespace CompressedCuckoo{
     constexpr uint_fast8_t num_passes = util::log2ceil(_buckets_per_block);
     static_assert(_max_fingerprints_per_block > 0, "The number of fingerprints "
       "per block must be one or more.");
-    constexpr uint_fast8_t masked_count = static_cast<uint_fast8_t>(ceil(log2(
-      _max_fingerprints_per_block) / _fullness_counter_width)) - 1;
+    constexpr uint_fast8_t masked_count = static_cast<uint_fast8_t>(util::log2ceil(
+      _max_fingerprints_per_block) / _fullness_counter_width) - 1;
     for(int8_t i = 0; i < masked_count; i++){ // Masked to avoid overflows
       sum = (sum & _reduction_masks[i]) + ((sum >> (_fullness_counter_width << i)) & _reduction_masks[i]);
     }
@@ -730,8 +735,9 @@ namespace CompressedCuckoo{
   INLINE uint16_t exclusive_reduce_with_popcount128(const block_t& b, 
     uint8_t counter_index) const{
     constexpr __uint128_t one = 1;
-    const __uint128_t mask = (one << (_fullness_counter_width * counter_index)) 
-      - one;
+    // Thanks to @asl for the bugfix https://github.com/AMDComputeLibraries/morton_filter/issues/2#issuecomment-568480311 
+    const uint64_t shift = _fullness_counter_width * counter_index;
+    const __uint128_t mask = shift == 128 ? __uint128_t(-1) : (one << shift) - one;
     uint8_t sum = 0u;
     __uint128_t counters;
     memcpy(&counters, &b, sizeof(__uint128_t));
@@ -1192,12 +1198,12 @@ namespace CompressedCuckoo{
 
   // Reports the C parameter from the VLDB'18 paper.  This is the ratio of physical slots in the FSA
   // to logical slots per block.
-  constexpr double report_compression_ratio(){
+  constexpr double report_compression_ratio() const{
     return static_cast<double>(_max_fingerprints_per_block) / (_buckets_per_block * _slots_per_bucket);
   }
 
   // This is the $\alpha_C$ term in the paper.
-  inline double report_block_occupancy(){
+  inline double report_block_occupancy() const{
     uint64_t full_slots_count = 0;
     for(uint64_t block_id = 0; block_id < _total_blocks; block_id++){
       full_slots_count += get_bucket_start_index(block_id, _buckets_per_block); 
@@ -1208,7 +1214,7 @@ namespace CompressedCuckoo{
   // Methods specific to Morton filters
   
   // Reports what fraction of the bits of the Overflow Tracking Array are set
-  double report_ota_occupancy(){
+  double report_ota_occupancy() const{
     uint64_t set_bit_count = 0;
     if(_morton_filter_functionality_enabled){
       for(uint64_t i = 0; i < _total_blocks; i++){     

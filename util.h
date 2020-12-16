@@ -74,7 +74,8 @@ namespace util{
   // This could be implemented using fancy binary arithmatic or builtins, 
   // but this probably suffices if the integer is known at compile time.
   constexpr inline uint32_t log2ceil(uint32_t integer){
-    //return ceil(log2(integer));
+    // I'm doing it this way because log2 is not a constexpr function in the 
+    // Clang toolchain whereas __builtin_clz is.
     return 32u - __builtin_clz(integer - 1u);
   }
 
